@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html ng-app="redditClone">
+	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+		<link rel="stylesheet" href="./main.css">
+
+
+		<script   src="https://code.jquery.com/jquery-3.1.1.js"   integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="   crossorigin="anonymous"></script>
+
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8"></script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js" charset="utf-8"></script>
+		<script src="http://code.angularjs.org/1.5.8/angular-animate.min.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/1.0.0/angular-moment.min.js" charset="utf-8"></script>
+
+		<script src="./main.js" charset="utf-8"></script>
+
+		<meta charset="utf-8">
+		<title>Reddit Clone</title>
+	</head>
+	<body ng-controller="PostController" ng-cloak="">
+		<nav class="navbar navbar-inverse">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#!">
+						Reddit Clone
+					</a>
+					<ul class="nav navbar-nav">
+						<li>
+							<a href="#!"
+							ng-click="view.showAddPost = !view.showAddPost">Add Post <span class="glyphicon" ng-class="{
+								'glyphicon glyphicon-triangle-bottom': !view.showAddPost,
+									'glyphicon glyphicon-triangle-top': view.showAddPost
+
+							}"></span></a>
+						</li>
+						<li class="dropdown">
+						 <a href="#!" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sort By | {{ view.sortNames[view.sortBy] }} <span class="caret"></span></a>
+						 <ul class="dropdown-menu">
+							 <li>
+								 <a href="#!" ng-click="view.sortBy = 'title'">Title</a>
+							 </li>
+							 <li>
+								 <a href="#!" ng-click="view.sortBy = 'author'">Author</a>
+							 </li>
+							 <li>
+								 <a href="#!" ng-click="view.sortBy = 'createdOn'">Date</a>
+							 </li>
+							 <li>
+								 <a href="#!" ng-click="view.sortBy = 'upVotes'">Up Votes</a>
+							 </li>
+						 </ul>
+					 </li>
+					</ul>
+
+					<form class="navbar-form navbar-left">
+		        <div class="form-group">
+		          <input type="text"
+							class="form-control"
+							placeholder="Search"
+							ng-model="search">
+		        </div>
+		      </form>
+				</div>
+			</div>
+		</nav>
+		<div class="container">
+			<div class="row fading"
+			ng-if="view.showAddPost">
+				<form class="form col-md-8 col-md-offset-2 container"
+					ng-submit="addPost(post_form)"
+					name="post_form"
+					novalidate
+				>
+					<div class="form-group row"
+					ng-class="{
+						'has-success': post_form.author.$valid && post_form.author.$dirty,
+						'has-error': post_form.author.$invalid && post_form.author.$dirty
+					}">
+						<div class="col-md-5 col-xs-5 col-xs-offset-1">
+							<input class="form-control" type="text"
+								name="author"
+								ng-model="postForm.author"
+								placeholder="Author"
+								required
+								minlength=6
+							>
+						</div>
+						<div class="col-md-5 col-xs-5">
+							<input class="form-control" type="text"
+								name="title"
+								ng-model="postForm.title"
+								placeholder="Title"
+								required
+								minglength=6
+
+							>
+						</div>
+					</div>
+
+					<div class="form-group row"
+					ng-class="{
+						'has-success': post_form.image_url.$valid && post_form.image_url.$dirty,
+						'has-error': post_form.image_url.$invalid && post_form.image_url.$dirty
+					}">
+						<div class="col-md-10 col-xs-10 col-xs-offset-1">
+							<input class="form-control" type="text"
+							name="image_url"
+							ng-model="postForm.imageURL"
+							placeholder="Image URL"
+							required
+							minlength=6
+							>
+						</div>
+					</div>
+					<div class="form-group row"
+					ng-class="{
+						'has-success': post_form.description.$valid && post_form.description.$dirty,
+						'has-error': post_form.description.$invalid && post_form.description.$dirty
+					}">
+						<div class="col-md-10 col-xs-10 col-xs-offset-1">
+							<textarea class="form-control"
+								name="description"
+								rows="8" cols="40"
+								ng-model="postForm.description"
+								placeholder="Desciption..."
+								required
+								minlength=10>
+
+							</textarea>
+						</div>
+
+					</div>
+					<div class="form-group row">
+						<div class="col-md-4 col-md-offset-6 col-xs-4 col-xs-offset-7">
+							<input class="form-control btn btn-success" type="submit" value="Add Post">
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="row">
+				<div class="well col-md-10 col-md-offset-1"
+				ng-repeat="post in view.posts | orderBy : view.sortBy : true | filter:search">
+
+					<div class="col-md-3">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-md-12">
+
+									<a class="thumbnail" href="#!">
+
+										<img src="{{ post.imageURL }}"
+										alt="{{ post.title }} image"
+										class="image-thumbnail">
+
+									</a>
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-9">
+						<div class="container-fluid">
+							<div class=row>
+								<div class="col-md-9">
+									<h3> {{ post.title }} |
+										<a href="#!"
+										ng-click="post.upVotes = post.upVotes + 1">
+											<span class="text-success glyphicon glyphicon-arrow-up"></span>
+										</a>
+										<a href="#!"
+										ng-click="post.upVotes = post.upVotes - 1">
+											<span class="text-danger glyphicon glyphicon-arrow-down"></span>
+										</a>
+										<span ng-class="{
+											'green': post.upVotes > 0,
+											'red': post.upVotes < 0,
+											'black': post.upVotes == 0
+										}">{{ post.upVotes }}</span>
+									</h3>
+								</div>
+								<div class="col-md-3">
+									<p>By: {{ post.author }}</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<p>{{ post.description }}</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3 col-xs-4">
+									<time am-time-ago="post.createdOn"></time>
+								</div>
+								<div class="col-md-2 col-xs-3">
+									<a href="#!"
+									ng-click="post.commentsOnOff = !post.commentsOnOff; post.addCommentsOnOff = false"><ng-pluralize count="post.comments.length"
+                when="{
+                       'one': '1 Comment',
+                       'other': '{} Comments'}">
+  </ng-pluralize></a>
+								</div>
+								<div class="col-xs-3">
+									<a href="#!"
+									ng-click="post.addCommentsOnOff = !post.addCommentsOnOff; post.commentsOnOff = false">Add Comment</a>
+								</div>
+
+							</div>
+							<div class="row fading"
+							ng-if="post.addCommentsOnOff">
+							<hr>
+							<h3>Add Comment</h3>
+								<form class="form container"
+									ng-submit="addComment(addCommentForm, post)"
+									name="addCommentForm"
+									novalidate>
+
+									<div class="form-group row"
+										ng-class="{
+											'has-danger': addCommentForm.author.$invalid && addCommentForm.author.$dirty,
+											'has-success': addCommentForm.author.$valid
+										}">
+										<div class="col-md-4 col-xs-8">
+											<input type="text"
+											required
+											name='author'
+											class="form-control"
+											ng-model="commentForm.author"
+											ng-class="{
+												'form-control-danger': addCommentForm.author.$invalid && addCommentForm.author.$dirty,
+												'form-control-success': addCommentForm.author.$valid
+											}"
+											placeholder="Author"
+											required>
+										</div>
+										<div class="col-md-2 col-xs-4">
+											<input type="submit" value="Post"
+												class="form-control btn btn-primary">
+										</div>
+
+									</div>
+
+									<div class="form-group  row"
+										ng-class="{
+											'has-danger': addCommentForm.body.$invalid && addCommentForm.body.$dirty,
+											'has-success': addCommentForm.body.$valid
+										}">
+										<div class="col-md-6">
+											<textarea
+												name='body'
+												class="form-control"
+												ng-model="commentForm.body"
+												ng-class="{
+													'form-control-danger': addCommentForm.body.$invalid && addCommentForm.body.$dirty,
+													'form-control-success': addCommentForm.body.$valid
+												}"
+												placeholder="Comment"
+												rows="4" cols="30"
+												required>
+
+											</textarea>
+
+										</div>
+									</div>
+
+								</form>
+							</div>
+
+							<div class="container-fluid fading"
+							ng-if="post.commentsOnOff">
+							<hr>
+								<div class="row">
+									<div class="col-md-3">
+										<h3>Comments</h3>
+									</div>
+								</div>
+								<div  class="row comment"
+									ng-repeat="comment in post.comments"
+								>
+									<div class="col-md-8">
+
+										<h3>{{ comment.author }}</h3>
+
+										<p>{{ comment.body }}</p>
+
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,71 @@
+.red {
+	color: red;
+}
+
+.green {
+	color: green;
+}
+
+.black {
+	color: black;
+}
+
+.comment {
+	background: white;
+	margin: 20px;
+	width: 600px;
+}
+a:hover{
+	text-decoration: none;
+}
+
+a:focus {
+	text-decoration: none;
+}
+.comment h3{
+	font-size: 1.5rem;
+	text-decoration: underline;
+	color: rgb(20, 78, 80);
+}
+
+.well.ng-enter {
+  -webkit-transition: 1s;
+  transition: 1s;
+  opacity: 0;
+}
+
+.well.ng-enter-active {
+  opacity: 1;
+}
+
+.well.ng-leave {
+  -webkit-transition: 1s;
+  transition: 1s;
+
+  opacity: 1;
+}
+
+.well.ng-leave-active {
+  opacity: 0;
+}
+
+.fading.ng-enter {
+  -webkit-transition: 1s;
+  transition: 1s;
+  opacity: 0;
+}
+
+.fading.ng-enter-active {
+  opacity: 1;
+}
+
+.fading.ng-leave {
+  -webkit-transition: 1s;
+  transition: .3s;
+
+  opacity: 1;
+}
+
+.fading.ng-leave-active {
+  opacity: 0;
+}
